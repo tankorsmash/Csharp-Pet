@@ -6,6 +6,12 @@ using System.Threading;
 
 namespace TammyFranklin
 {
+    class Meta
+    {
+        public static string ver = "0.0.1";
+    }
+
+
     class Program
     {
 
@@ -23,10 +29,17 @@ namespace TammyFranklin
             Console.BackgroundColor = defaultBG;
             Console.ForegroundColor = defaultFG;
             
+            //Print intro line
+            string welcomeString = "Welcome to the PET GAME version: {0}\n\n";
+            string welcomeArg =  Meta.ver;
+            Tools.Print(ConsoleColor.Black, ConsoleColor.White, welcomeString, welcomeArg);
+
+
             //loops forever afaik
             //while (true)
             //{
                 //Create new pet
+             
                 string name = Tools.Prompt(ConsoleColor.Red, ConsoleColor.Black, "What is your new pets name?");
 
                 Pet userPet = new Pet(name);
