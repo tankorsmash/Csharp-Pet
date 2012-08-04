@@ -1,0 +1,136 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+
+namespace TammyFranklin
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //Intro to the app
+            Console.Title = "Tasxii o";
+            Console.BackgroundColor = ConsoleColor.DarkGreen;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            
+            //loops forever afaik
+            while (true)
+            {
+                //Create new pet
+                //string name = Console.ReadLine();
+                //Pet userPet = new Pet(name);
+                Tools.Prompt("asd", "a  ");
+            }
+            //Console.WriteLine(tami.ToString());
+            Pet bird = new Pet("kermit");
+
+            //Print bird's current exp
+            bird.printExp();
+
+            bird.raiseExp(22);
+
+            //Wait for Key on exit
+            Console.ReadKey();
+        }
+    }
+
+    static class Tools
+    {
+
+        /// <summary>
+        /// Lazy and wrote a mock python print function; just found out it's not helpful though.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns>the text that was printed to line</returns>
+        public static string print(string text)
+        {
+            Console.WriteLine(text);
+            return text;
+        }
+
+        public static string Prompt(string[] args)
+        {
+            print(args);
+            return "testing";
+        }
+    }
+
+    /// <summary>
+    /// Handles all the pets moods. Starting with Happy, Sad, Tired, Sleeping, Hungry
+    /// </summary>
+    class PetMoodComponent
+    {
+    
+    }
+
+    class Pet
+    {
+        //pet details
+        public string name;
+        public int level= 0;
+        public long exp = 0;
+        public char gender = 'm';
+
+        
+        public Pet(string newName, char newGender = 'm')
+        {
+            this.name = newName;
+            this.gender = newGender;
+
+            Console.WriteLine("A new {1} Pet was created, named {0}", this.name, this.getGender());   
+            //constructor method
+        }
+
+        /// <summary>
+        /// Returns the gender of the Pet, either full word "male" or a single letter "m"
+        /// </summary>
+        /// <param name="fullWord"></param>
+        /// <returns>"male" or "m"</returns>
+        public string getGender(bool fullWord = true)
+        {
+            if (fullWord)
+            {
+                if (this.gender == 'm')
+                {
+                    return "male";
+                }
+                else
+                {
+                    return "female";
+                }
+            }
+            else { 
+                return this.gender.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Adds exp to the pet's total, and changes the level if needed
+        /// </summary>
+        /// <param name="exp"></param>
+        /// <returns>a long with the total exp</returns>
+        public long raiseExp(long newExp)
+        {
+            this.exp += newExp;
+            long printedExp;
+            printedExp = printExp();
+            return printedExp;
+        }
+
+        //Writes the current exp to the console and returns a long of the current exp
+        public long printExp()
+        {
+            Console.WriteLine("This is {0}'s total exp : {1}", this.name, this.exp);
+            return this.exp;
+        }
+
+
+
+        public void changeName(string  newName){
+            this.name = newName;
+            Console.WriteLine("Pets new name: {0}", name);
+        }
+    }
+}
