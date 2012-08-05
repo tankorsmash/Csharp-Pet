@@ -38,23 +38,29 @@ namespace TammyFranklin
             string welcomeArg = Meta.ver;
             Tools.Print(ConsoleColor.Black, ConsoleColor.White, welcomeString, welcomeArg);
 
+
+            //Creates User with a default name
+            User user = new User();
+
             //Gets the name of the pet.
             string name = Tools.Prompt("What is the name of your new male Pet?");
-            Pet yourPet = new Pet(name);
+            Pet yourPet = new Pet(user, name);
 
-            //Into message
+            //Intro message
             Tools.Print(newFG: ConsoleColor.DarkBlue,
                         newBG: ConsoleColor.Cyan,
-                        text: "\tThis is the main loop for the game. \n" +
+                        text: "\t\nThis is the main loop for the game. \n" +
                             "It is here that you'll feed or fight your" +
-                            " pet in order to train the shit out of it" +
-                            "\n\n\nBEGIN!");
+                            "\npet in order to train the shit out of it" +
+                            "\n\n\n\t\tBEGIN!");
 
             //loops forever afaik
             while (true)
             {
-                string action = getUserAction();
+                    string choices = "\t[f]eed, [b]attle or [q]uit.";
+                    string action = getUserAction(choices);
 
+                Tools.Print(newFG: ConsoleColor.Yellow, text:"This was the action chosen: {0}", vals:action);
 
                 //Tools.Prompt("asd", "a  ");
             }
@@ -66,13 +72,37 @@ namespace TammyFranklin
         }
 
 
-        private static string getUserAction()
+        private static string getUserAction(string choices)
         {
-            string choices = "\t[f]eed, [b]attle or [q]uit.";
-            Dictionary<string,string> validAnwers = FindActionKeys(choices);
-            string action = Tools.Prompt("What do you want to do?\n{0}", choices);
+            //whether or not the userAction is valid
+            bool actionIsValid = false;
 
-            return action;
+            //From the choices string, parse out the optional actions, returned as a key:action
+            Dictionary<string,string> validAnwers = FindActionKeys(choices);
+
+            do
+            {
+                //Get the user's choice of action
+                string action = Tools.Prompt("What do you want to do?\n{0}", choices);
+
+                //Verify that it's in the keys of the validAnswers
+                if (validAnwers.ContainsKey(action))
+                {
+                    Tools.Print("you have chosen wisely");
+
+                    return action;
+                }
+                else
+                {
+                    Tools.Print(newFG:ConsoleColor.Red, 
+                                text:"Incorrect key, please type exactly the letter you're looking for.");
+                    //return action;
+                }
+            } while (!actionIsValid);
+
+            //since the loop is done, the action is considered valid, and returned
+            //return action;
+            return "this shouldnt even be run";
         }
 
         /// <summary>
@@ -95,7 +125,7 @@ namespace TammyFranklin
             //loop over the matches
             foreach (Match result in matches)
             {
-                Console.WriteLine("next match");
+                //Console.WriteLine("next match");
                 //add the key and words to the dict, uglily replace the brackets.
                 keyWordPairs.Add(result.Groups[1].Value,  //key set to the letter
                     result.Groups[0].Value.Replace("[", "").Replace("]", "")); //value set to word without [ or ]
@@ -105,7 +135,7 @@ namespace TammyFranklin
             foreach (KeyValuePair<string, string> pair in keyWordPairs)
             {
 
-                Console.WriteLine("Key: {0} to {1}", pair.Key, pair.Value);
+                //Console.WriteLine("Key: {0} to {1}", pair.Key, pair.Value);
 
             }
 
@@ -113,6 +143,50 @@ namespace TammyFranklin
         }
 
 
+        class Action
+        {
+            //The user who's action this is
+            User master;
+
+            public  Action(User master)
+            {
+                this.master = master;
+            }
+           
+        }
+
+        class FeedAction : Action
+        {
+            public  FeedAction(User master) : base(master)
+            {
+
+            }
+        }
+
+        class User
+        {
+            private string _name;
+
+            public string name
+            {
+                get {
+                    return this._name;
+                }
+                set { 
+                    this._name = value; 
+                }
+            }
+            
+
+            public  User(string newName = "USERjosh")
+            {
+
+                this.name = newName;
+
+                string text = String.Format("{0} was just created as an instance of {1}", this.name, this);
+                Tools.Print(newFG:ConsoleColor.Green, text:text);
+            }
+        }
 
 
         static class Tools
@@ -177,6 +251,7 @@ namespace TammyFranklin
                 return response;
             }
         }
+        
 
         /// <summary>
         /// Handles all the pets moods. Starting with Happy, Sad, Tired, Sleeping, Hungry
@@ -200,6 +275,17 @@ namespace TammyFranklin
             }
         }
 
+        class PetFoodComponent
+        {
+            //who owns the instance of PFC
+            Pet master;
+
+            public PetFoodComponent(Pet master)
+            {
+                this.master = master;
+            }
+        }
+
         class Pet
         {
             //pet details
@@ -207,15 +293,23 @@ namespace TammyFranklin
             public int level = 0;
             public long exp = 0;
             public char gender = 'm';
+            public User master;
 
             public PetMoodComponent mood;
+            public PetFoodComponent food;
 
-            public Pet(string newName, char newGender = 'm')
+            public Pet(User newMaster, string newName, char newGender = 'm')
             {
+                this.master = newMaster;
                 this.name = newName;
                 this.gender = newGender;
 
-                Console.WriteLine("A new {1} lion was created, named {0}", this.name, this.getGender());
+                //assign components
+                this.mood = new PetMoodComponent(this);
+                this.food = new PetFoodComponent(this);
+
+                Console.WriteLine("A new {1} lion was created, named {0}, belonging to {2}",
+                    this.name, this.getGender(), this.master.name);
                 //constructor method
             }
 
