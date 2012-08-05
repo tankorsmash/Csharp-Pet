@@ -24,7 +24,7 @@ namespace TammyFranklin
         public const ConsoleColor defaultBG = ConsoleColor.Black;
 
 
-        static void Main(string[] args)
+        static void Main(string[] args)                                        
         {
             //Intro to the app
             Console.Title = "sarah's game";
@@ -54,11 +54,21 @@ namespace TammyFranklin
                             "\npet in order to train the shit out of it" +
                             "\n\n\n\t\tBEGIN!");
 
-            //loops forever afaik
+            //main loop
             while (true)
             {
-                    string choices = "\t[f]eed, [b]attle or [q]uit.";
-                    string action = getUserAction(choices);
+                //give the user a choice of actions.
+                string choices = "\t[f]eed, [b]attle or [q]uit.";
+                KeyValuePair<string,string> action = getUserAction(choices);
+
+                if (action.Value == "feed")
+                {
+                    FeedAction feeding = new FeedAction(user);
+                    feeding.FeedPet(yourPet, new FoodMeat());
+
+
+                    //yourPet.food.Eat(new FoodMeat());
+                }
 
                 Tools.Print(newFG: ConsoleColor.Yellow, text:"This was the action chosen: {0}", vals:action);
 
@@ -72,7 +82,7 @@ namespace TammyFranklin
         }
 
 
-        private static string getUserAction(string choices)
+        private static KeyValuePair<string,string> getUserAction(string choices)
         {
             //whether or not the userAction is valid
             bool actionIsValid = false;
@@ -89,8 +99,9 @@ namespace TammyFranklin
                 if (validAnwers.ContainsKey(action))
                 {
                     Tools.Print("you have chosen wisely");
-
-                    return action;
+                    //Tools.Print(validAnwers[action]);
+                    //return action;
+                    return new KeyValuePair<string,string>(action, validAnwers[action]);
                 }
                 else
                 {
@@ -102,7 +113,7 @@ namespace TammyFranklin
 
             //since the loop is done, the action is considered valid, and returned
             //return action;
-            return "this shouldnt even be run";
+            return new KeyValuePair<string, string>("invalid", "invalid");
         }
 
         /// <summary>
@@ -159,12 +170,31 @@ namespace TammyFranklin
         {
             public  FeedAction(User master) : base(master)
             {
+                
+                //nothing happens
+            }
 
+            //Feeds the pet a Foodtype
+            public void FeedPet(Pet pet, FoodType foodToEat)
+            {
+                //feed the pet food
+                pet.food.Eat(foodToEat);
+                
+                //print the 
+                string text = "{0} just ate {1}, sat. lvl is: {2}";
+                string formatted = String.Format(text, pet.name, foodToEat, pet.food.satiation);
+                Tools.Print(newBG: ConsoleColor.Green,
+                            text: text);
             }
         }
 
+
+
         class User
         {
+            
+
+
             private string _name;
 
             public string name
@@ -176,7 +206,11 @@ namespace TammyFranklin
                     this._name = value; 
                 }
             }
-            
+
+            public override string ToString()
+            {
+                return String.Format("A User named {0}", this.name);
+            }
 
             public  User(string newName = "USERjosh")
             {
@@ -185,6 +219,8 @@ namespace TammyFranklin
 
                 string text = String.Format("{0} was just created as an instance of {1}", this.name, this);
                 Tools.Print(newFG:ConsoleColor.Green, text:text);
+                
+                
             }
         }
 
@@ -197,7 +233,7 @@ namespace TammyFranklin
             /// </summary>
             /// <param name="text"></param>
             /// <returns>the text that was printed to line</returns>
-            public static string Print(string text, params Object[] vals)
+            public static string Print(string text, params object[] vals)
             {
                 string toPrint = string.Format(text, vals);
                 Console.WriteLine(toPrint);
@@ -212,7 +248,7 @@ namespace TammyFranklin
             /// <param name="text">The text to print</param>
             /// <param name="vals">The strings to format into the text</param>
             /// <returns></returns>
-            public static string Print(ConsoleColor newFG = Program.defaultFG, ConsoleColor newBG = Program.defaultBG, string text = "None set", params Object[] vals)
+            public static string Print(ConsoleColor newFG = Program.defaultFG, ConsoleColor newBG = Program.defaultBG, string text = "None set", params object[] vals)
             {
                 //Changes the Console colors to the new colors,  then changes the console colors back.
                 ConsoleColor curFG = Console.ForegroundColor;
@@ -221,8 +257,18 @@ namespace TammyFranklin
                 Console.ForegroundColor = newFG;
                 Console.BackgroundColor = newBG;
 
-                string toPrint = string.Format(text, vals);
-                Console.WriteLine(toPrint);
+                try
+                {
+                    string toPrint = string.Format(text, vals);
+                    Console.WriteLine(toPrint);
+
+                }
+                catch (FormatException ex)
+                {
+                    Console.WriteLine(vals);
+                    Console.WriteLine(ex);
+                }
+                
 
                 //Change the colors back
                 Console.ForegroundColor = curFG;
@@ -279,11 +325,21 @@ namespace TammyFranklin
         {
             //who owns the instance of PFC
             Pet master;
+            //closer the satiation is to zero, the hungrier 
+            //the pet is. At less than zero, it starts losing
+            //health.
+            public int satiation;
 
             public PetFoodComponent(Pet master)
             {
                 this.master = master;
             }
+
+            public void Eat(FoodType toBeEaten)
+            {
+
+            }
+
         }
 
         class Pet
