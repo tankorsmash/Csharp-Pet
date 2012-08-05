@@ -140,7 +140,7 @@ namespace TammyFranklin
             /// <returns></returns>
             public static string Print(ConsoleColor newFG = Program.defaultFG, ConsoleColor newBG = Program.defaultBG, string text = "None set", params Object[] vals)
             {
-                //Changes the Console colors to the new colors, then changes the console colors back.
+                //Changes the Console colors to the new colors,  then changes the console colors back.
                 ConsoleColor curFG = Console.ForegroundColor;
                 ConsoleColor curBG = Console.BackgroundColor;
 
