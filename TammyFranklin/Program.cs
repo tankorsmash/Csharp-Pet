@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 
 
-namespace TammyFranklin
+namespace PetR1
 {
     class Meta
     {
@@ -183,8 +183,10 @@ namespace TammyFranklin
                 //print the 
                 string text = "{0} just ate {1}, sat. lvl is: {2}";
                 string formatted = String.Format(text, pet.name, foodToEat, pet.food.satiation);
-                Tools.Print(newBG: ConsoleColor.Green,
-                            text: text);
+                Tools.Print( defaultFG,
+                            ConsoleColor.Green,
+                            text,
+                            pet.name, foodToEat, pet.food.satiation);
             }
         }
 
@@ -248,7 +250,10 @@ namespace TammyFranklin
             /// <param name="text">The text to print</param>
             /// <param name="vals">The strings to format into the text</param>
             /// <returns></returns>
-            public static string Print(ConsoleColor newFG = Program.defaultFG, ConsoleColor newBG = Program.defaultBG, string text = "None set", params object[] vals)
+            public static string Print(ConsoleColor newFG = Program.defaultFG, 
+                                        ConsoleColor newBG = Program.defaultBG, 
+                                        string text = "None set",
+                                        params object[] vals)
             {
                 //Changes the Console colors to the new colors,  then changes the console colors back.
                 ConsoleColor curFG = Console.ForegroundColor;
@@ -257,17 +262,17 @@ namespace TammyFranklin
                 Console.ForegroundColor = newFG;
                 Console.BackgroundColor = newBG;
 
-                try
-                {
+                //try
+                //{
                     string toPrint = string.Format(text, vals);
                     Console.WriteLine(toPrint);
 
-                }
-                catch (FormatException ex)
-                {
-                    Console.WriteLine(vals);
-                    Console.WriteLine(ex);
-                }
+                //}
+                //catch (FormatException ex)
+                //{
+                  //Console.WriteLine(vals);
+                  //Console.WriteLine(ex);
+                //}
                 
 
                 //Change the colors back
