@@ -58,7 +58,7 @@ namespace PetR1
             while (true)
             {
                 //give the user a choice of actions.
-                string choices = "\t[f]eed, [b]attle or [q]uit.";
+                string choices = "\t[f]eed, [b]attle, [s]tats or [q]uit.";
                 KeyValuePair<string,string> action = getUserAction(choices);
 
                 if (action.Value == "feed")
@@ -66,13 +66,16 @@ namespace PetR1
                     FeedAction feeding = new FeedAction(user);
                     feeding.FeedPet(yourPet, new FoodMeat());
 
+                }
+                else if (action.Value == "stats"){
 
-                    //yourPet.food.Eat(new FoodMeat());
+                    StatAction stats = new StatAction(user);
+                    stats.CheckPetStats(yourPet);
+                
                 }
 
                 Tools.Print(newFG: ConsoleColor.Yellow, text:"This was the action chosen: {0}", vals:action);
 
-                //Tools.Prompt("asd", "a  ");
             }
 
 
@@ -183,10 +186,33 @@ namespace PetR1
                 //print the 
                 string text = "{0} just ate {1}, sat. lvl is: {2}";
                 string formatted = String.Format(text, pet.name, foodToEat, pet.food.satiation);
-                Tools.Print( defaultFG,
-                            ConsoleColor.Green,
-                            text,
-                            pet.name, foodToEat, pet.food.satiation);
+                Tools.Print(newFG: defaultFG,
+                            text: text,
+                            newBG:ConsoleColor.DarkGreen,
+                            
+                            vals: new object[] {pet.name, foodToEat, pet.food.satiation});
+            }
+        }
+
+        //Printing out a screen of stats for the current pet
+        class StatAction : Action
+        {
+            public User master;
+            public StatAction(User master) : base(master)
+            {
+                this.master = master;
+            }
+
+
+            public void CheckPetStats(Pet pet)
+            {
+                Tools.Print(newFG:ConsoleColor.Gray,
+                text: "Current Pet's name {0}\n" +
+                             "Current Satiation {1}\n" +
+                             "Current EXP {2}",
+                  vals: new object[] {pet.name,
+                             pet.food.satiation,
+                             pet.exp});
             }
         }
 
@@ -339,10 +365,15 @@ namespace PetR1
             {
                 this.master = master;
             }
-
+            
             public void Eat(FoodType toBeEaten)
             {
+                this.satiation += toBeEaten.nutrientsGiven;
 
+                if (satiation >= 150)
+                {
+                    Tools.Print(newBG:ConsoleColor.Red, text:"Mother fucker is full yo, stop feeding it.");
+                }
             }
 
         }
