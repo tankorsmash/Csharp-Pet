@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-
+using Lidgren.Network;
 
 
 namespace PetR1
@@ -13,6 +13,8 @@ namespace PetR1
     class Meta
     {
         public static string ver = "0.0.1";
+
+        
     }
 
 
@@ -49,10 +51,10 @@ namespace PetR1
             //Intro message
             Tools.Print(newFG: ConsoleColor.DarkBlue,
                         newBG: ConsoleColor.Cyan,
-                        text: "\t\nThis is the main loop for the game. \n" +
+                        text: "\nThis is the main loop for the game. \n" +
                             "It is here that you'll feed or fight your" +
                             "\npet in order to train the shit out of it" +
-                            "\n\n\n\t\tBEGIN!");
+                            "\n\n\n\t\tBEGIN!\n");
 
             //main loop
             while (true)
@@ -264,7 +266,14 @@ namespace PetR1
             public static string Print(string text, params object[] vals)
             {
                 string toPrint = string.Format(text, vals);
-                Console.WriteLine(toPrint);
+
+                if ( !toPrint.EndsWith("\n"))
+                {
+                    Console.Write(toPrint);
+                }
+                else { 
+                    Console.WriteLine(toPrint);
+                }
                 return text;
             }
 
@@ -311,6 +320,7 @@ namespace PetR1
             public static string Prompt(string promptText, params Object[] formatting)
             {
                 //writes a string to buffer, then returns the string of the response
+                promptText = promptText + "\n>>> ";
                 Print(promptText, formatting);
 
                 string response = Console.ReadLine();
@@ -352,6 +362,21 @@ namespace PetR1
             }
         }
 
+        /// <summary>
+        /// Any pet related status, such as being full or sick or anything
+        /// will be passed to this component to be shown to the user
+        /// </summary>
+        class PetStatusComponent
+        {
+
+
+
+        }
+
+
+        /// <summary>
+        /// Handles all the eating related stuff for the pet
+        /// </summary>
         class PetFoodComponent
         {
             //who owns the instance of PFC
