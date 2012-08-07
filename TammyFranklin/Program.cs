@@ -12,9 +12,9 @@ namespace PetR1
 {
     class Meta
     {
-        public static string ver = "0.0.1";
+        public static string ver = "0.0.2";
 
-        
+
     }
 
 
@@ -26,7 +26,7 @@ namespace PetR1
         public const ConsoleColor defaultBG = ConsoleColor.Black;
 
 
-        static void Main(string[] args)                                        
+        static void Main(string[] args)
         {
             //Intro to the app
             Console.Title = "sarah's game";
@@ -34,6 +34,7 @@ namespace PetR1
 
             Console.BackgroundColor = defaultBG;
             Console.ForegroundColor = defaultFG;
+
 
             //Print intro line
             string welcomeString = "Welcome to the PET GAME version: {0}\n\n";
@@ -61,22 +62,20 @@ namespace PetR1
             {
                 //give the user a choice of actions.
                 string choices = "\t[f]eed, [b]attle, [s]tats or [q]uit.";
-                KeyValuePair<string,string> action = getUserAction(choices);
+                KeyValuePair<string, string> action = getUserAction(choices);
 
                 if (action.Value == "feed")
                 {
                     FeedAction feeding = new FeedAction(user);
                     feeding.FeedPet(yourPet, new FoodMeat());
-
                 }
-                else if (action.Value == "stats"){
-
+                else if (action.Value == "stats")
+                {
                     StatAction stats = new StatAction(user);
                     stats.CheckPetStats(yourPet);
-                
                 }
 
-                Tools.Print(newFG: ConsoleColor.Yellow, text:"This was the action chosen: {0}", vals:action);
+                //Tools.Print(newFG: ConsoleColor.Yellow, text:"This was the action chosen: {0}\n", vals:action);
 
             }
 
@@ -87,13 +86,13 @@ namespace PetR1
         }
 
 
-        private static KeyValuePair<string,string> getUserAction(string choices)
+        private static KeyValuePair<string, string> getUserAction(string choices)
         {
             //whether or not the userAction is valid
             bool actionIsValid = false;
 
             //From the choices string, parse out the optional actions, returned as a key:action
-            Dictionary<string,string> validAnwers = FindActionKeys(choices);
+            Dictionary<string, string> validAnwers = FindActionKeys(choices);
 
             do
             {
@@ -103,15 +102,15 @@ namespace PetR1
                 //Verify that it's in the keys of the validAnswers
                 if (validAnwers.ContainsKey(action))
                 {
-                    Tools.Print("you have chosen wisely");
+                    Tools.Print("you have chosen wisely\n");
                     //Tools.Print(validAnwers[action]);
                     //return action;
-                    return new KeyValuePair<string,string>(action, validAnwers[action]);
+                    return new KeyValuePair<string, string>(action, validAnwers[action]);
                 }
                 else
                 {
-                    Tools.Print(newFG:ConsoleColor.Red, 
-                                text:"Incorrect key, please type exactly the letter you're looking for.");
+                    Tools.Print(newFG: ConsoleColor.Red,
+                                text: "Incorrect key, please type exactly the letter you're looking for.\n");
                     //return action;
                 }
             } while (!actionIsValid);
@@ -127,7 +126,7 @@ namespace PetR1
         /// </summary>
         /// <param name="toTest">The string you want to make get the letter:word legend from</param>
         /// <returns>A dict with letter:word pairs, both strings</returns>
-        private static Dictionary<string,string> FindActionKeys(string toTest)
+        private static Dictionary<string, string> FindActionKeys(string toTest)
         {
 
             //Finds the bracketed letter along with the whole word it belongs to
@@ -164,18 +163,19 @@ namespace PetR1
             //The user who's action this is
             User master;
 
-            public  Action(User master)
+            public Action(User master)
             {
                 this.master = master;
             }
-           
+
         }
 
         class FeedAction : Action
         {
-            public  FeedAction(User master) : base(master)
+            public FeedAction(User master)
+                : base(master)
             {
-                
+
                 //nothing happens
             }
 
@@ -184,15 +184,19 @@ namespace PetR1
             {
                 //feed the pet food
                 pet.food.Eat(foodToEat);
-                
+
                 //print the 
-                string text = "{0} just ate {1}, sat. lvl is: {2}";
-                string formatted = String.Format(text, pet.name, foodToEat, pet.food.satiation);
+                string text = "{0} just ate {1}, {3} satiation level is now: {2}\n";
+                string formatted = String.Format(text,
+                                                pet.name,
+                                                foodToEat.type_of_food.ToLower(),
+                                                pet.food.satiation,
+                                                pet.pronoun);
                 Tools.Print(newFG: defaultFG,
-                            text: text,
-                            newBG:ConsoleColor.DarkGreen,
-                            
-                            vals: new object[] {pet.name, foodToEat, pet.food.satiation});
+                            text: formatted,
+                            newBG: ConsoleColor.DarkGreen);
+
+                //vals: new object[] {pet.name, foodToEat, pet.food.satiation});
             }
         }
 
@@ -200,7 +204,8 @@ namespace PetR1
         class StatAction : Action
         {
             public User master;
-            public StatAction(User master) : base(master)
+            public StatAction(User master)
+                : base(master)
             {
                 this.master = master;
             }
@@ -208,286 +213,313 @@ namespace PetR1
 
             public void CheckPetStats(Pet pet)
             {
-                Tools.Print(newFG:ConsoleColor.Gray,
+                Tools.Print(newFG: ConsoleColor.Gray,
                 text: "Current Pet's name {0}\n" +
                              "Current Satiation {1}\n" +
-                             "Current EXP {2}",
+                             "Current EXP {2}\n",
                   vals: new object[] {pet.name,
                              pet.food.satiation,
                              pet.exp});
             }
         }
+    }
 
 
+    class User
+    {
 
-        class User
+        public Inventory inventory;
+        private string _name;
+
+        public string name
         {
+            get
+            {
+                return this._name;
+            }
+            set
+            {
+                this._name = value;
+            }
+        }
+
+        public override string ToString()
+        {
+            return String.Format("A User named {0}", this.name);
+        }
+
+        public User(string newName = "USERjosh")
+        {
+
+            this.name = newName;
+            this.inventory = new Inventory(this);
             
+            string text = String.Format("{0} was just created as an instance of {1}\n", this.name, this);
+            Tools.Print(newFG: ConsoleColor.Green, text: text);
 
 
-            private string _name;
-
-            public string name
-            {
-                get {
-                    return this._name;
-                }
-                set { 
-                    this._name = value; 
-                }
-            }
-
-            public override string ToString()
-            {
-                return String.Format("A User named {0}", this.name);
-            }
-
-            public  User(string newName = "USERjosh")
-            {
-
-                this.name = newName;
-
-                string text = String.Format("{0} was just created as an instance of {1}", this.name, this);
-                Tools.Print(newFG:ConsoleColor.Green, text:text);
-                
-                
-            }
         }
+    }
 
 
-        static class Tools
-        {
-
-            /// <summary>
-            /// Lazy and wrote a mock python Print function; just found out it's not helpful though.
-            /// </summary>
-            /// <param name="text"></param>
-            /// <returns>the text that was printed to line</returns>
-            public static string Print(string text, params object[] vals)
-            {
-                string toPrint = string.Format(text, vals);
-
-                if ( !toPrint.EndsWith("\n"))
-                {
-                    Console.Write(toPrint);
-                }
-                else { 
-                    Console.WriteLine(toPrint);
-                }
-                return text;
-            }
-
-            /// <summary>
-            /// Print overload that allows to change the console color along with printint text
-            /// </summary>
-            /// <param name="newFG">The new foreground color </param>
-            /// <param name="newBG">The new background color</param>
-            /// <param name="text">The text to print</param>
-            /// <param name="vals">The strings to format into the text</param>
-            /// <returns></returns>
-            public static string Print(ConsoleColor newFG = Program.defaultFG, 
-                                        ConsoleColor newBG = Program.defaultBG, 
-                                        string text = "None set",
-                                        params object[] vals)
-            {
-                //Changes the Console colors to the new colors,  then changes the console colors back.
-                ConsoleColor curFG = Console.ForegroundColor;
-                ConsoleColor curBG = Console.BackgroundColor;
-
-                Console.ForegroundColor = newFG;
-                Console.BackgroundColor = newBG;
-
-                //try
-                //{
-                    string toPrint = string.Format(text, vals);
-                    Console.WriteLine(toPrint);
-
-                //}
-                //catch (FormatException ex)
-                //{
-                  //Console.WriteLine(vals);
-                  //Console.WriteLine(ex);
-                //}
-                
-
-                //Change the colors back
-                Console.ForegroundColor = curFG;
-                Console.BackgroundColor = curBG;
-
-                return text;
-            }
-
-            public static string Prompt(string promptText, params Object[] formatting)
-            {
-                //writes a string to buffer, then returns the string of the response
-                promptText = promptText + "\n>>> ";
-                Print(promptText, formatting);
-
-                string response = Console.ReadLine();
-
-                return response;
-            }
-
-            public static string Prompt(ConsoleColor fg, ConsoleColor bg, string promptText, params Object[] formatting)
-            {
-                //writes a string to buffer, then returns the string of the response
-                Print(fg, bg, promptText, formatting);
-
-                string response = Console.ReadLine();
-
-                return response;
-            }
-        }
-        
+    static class Tools
+    {
 
         /// <summary>
-        /// Handles all the pets moods. Starting with Happy, Sad, Tired, Sleeping, Hungry
+        /// Lazy and wrote a mock python Print function; just found out it's not helpful though.
         /// </summary>
-        class PetMoodComponent
+        /// <param name="text"></param>
+        /// <returns>the text that was printed to line</returns>
+        public static string Print(string text, params object[] vals)
         {
-            private Pet master;
+            string toPrint = string.Format(text, vals);
 
-            public PetMoodComponent(Pet master)
+            if (!toPrint.EndsWith("\n"))
             {
-                //define the pet which this mood belongs too
-                this.master = master;
-
-                //print confirmation.
-                Tools.Print(ConsoleColor.Green, ConsoleColor.DarkYellow, "This general mood belongs to: {0}", this.getMaster().ToString());
+                Console.Write(toPrint);
             }
-
-            public Pet getMaster()
+            else if (toPrint.EndsWith("\n"))
             {
-                return this.master;
+                Console.WriteLine(toPrint);
             }
+            return text;
         }
 
         /// <summary>
-        /// Any pet related status, such as being full or sick or anything
-        /// will be passed to this component to be shown to the user
+        /// Print overload that allows to change the console color along with printint text
         /// </summary>
-        class PetStatusComponent
+        /// <param name="newFG">The new foreground color </param>
+        /// <param name="newBG">The new background color</param>
+        /// <param name="text">The text to print</param>
+        /// <param name="vals">The strings to format into the text</param>
+        /// <returns></returns>
+        public static string Print(ConsoleColor newFG = Program.defaultFG,
+                                    ConsoleColor newBG = Program.defaultBG,
+                                    string text = "None set",
+                                    params object[] vals)
         {
+            //Changes the Console colors to the new colors,  then changes the console colors back.
+            ConsoleColor curFG = Console.ForegroundColor;
+            ConsoleColor curBG = Console.BackgroundColor;
+
+            Console.ForegroundColor = newFG;
+            Console.BackgroundColor = newBG;
+
+            //try
+            //{
+            string toPrint = string.Format(text, vals);
+            //Console.WriteLine(toPrint);
+            Print(toPrint);
+
+            //}
+            //catch (FormatException ex)
+            //{
+            //Console.WriteLine(vals);
+            //Console.WriteLine(ex);
+            //}
 
 
+            //Change the colors back
+            Console.ForegroundColor = curFG;
+            Console.BackgroundColor = curBG;
 
+            return text;
         }
 
-
-        /// <summary>
-        /// Handles all the eating related stuff for the pet
-        /// </summary>
-        class PetFoodComponent
+        public static string Prompt(string promptText, params Object[] formatting)
         {
-            //who owns the instance of PFC
-            Pet master;
-            //closer the satiation is to zero, the hungrier 
-            //the pet is. At less than zero, it starts losing
-            //health.
-            public int satiation;
+            //writes a string to buffer, then returns the string of the response
+            promptText = promptText + "\n>>> ";
+            Print(promptText, formatting);
 
-            public PetFoodComponent(Pet master)
+            string response = Console.ReadLine();
+
+            //add a newline
+            Console.WriteLine();
+
+            return response;
+        }
+
+        public static string Prompt(ConsoleColor fg, ConsoleColor bg, string promptText, params Object[] formatting)
+        {
+            //writes a string to buffer, then returns the string of the response
+            Print(fg, bg, promptText, formatting);
+
+            string response = Console.ReadLine();
+
+            return response;
+        }
+    }
+
+
+    /// <summary>
+    /// Handles all the pets moods. Starting with Happy, Sad, Tired, Sleeping, Hungry
+    /// </summary>
+    class PetMoodComponent
+    {
+        private Pet master;
+
+        public PetMoodComponent(Pet master)
+        {
+            //define the pet which this mood belongs too
+            this.master = master;
+
+            //print confirmation.
+            Tools.Print(ConsoleColor.Green, ConsoleColor.DarkYellow, "This general mood belongs to: {0}\n", this.getMaster().ToString());
+        }
+
+        public Pet getMaster()
+        {
+            return this.master;
+        }
+    }
+
+    /// <summary>
+    /// Any pet related status, such as being full or sick or anything
+    /// will be passed to this component to be shown to the user
+    /// </summary>
+    class PetStatusComponent
+    {
+
+
+
+    }
+
+
+    /// <summary>
+    /// Handles all the eating related stuff for the pet
+    /// </summary>
+    class PetFoodComponent
+    {
+        //who owns the instance of PFC
+        Pet master;
+        //closer the satiation is to zero, the hungrier 
+        //the pet is. At less than zero, it starts losing
+        //health.
+        public int satiation;
+
+        public PetFoodComponent(Pet master)
+        {
+            this.master = master;
+        }
+
+        public void Eat(FoodType toBeEaten)
+        {
+            this.satiation += toBeEaten.nutrientsGiven;
+
+            if (satiation >= 150)
             {
-                this.master = master;
+                Tools.Print(newBG: ConsoleColor.Red, text: "Mother fucker is full yo, stop feeding it.");
             }
-            
-            public void Eat(FoodType toBeEaten)
-            {
-                this.satiation += toBeEaten.nutrientsGiven;
+        }
 
-                if (satiation >= 150)
+    }
+
+    class Pet
+    {
+        //pet details
+        public string name;
+        public int level = 0;
+        public long exp = 0;
+
+        public char gender = 'm';
+        public string pronoun
+        {
+            get
+            {
+                if (gender == 'm')
                 {
-                    Tools.Print(newBG:ConsoleColor.Red, text:"Mother fucker is full yo, stop feeding it.");
+                    return "his";
                 }
-            }
-
-        }
-
-        class Pet
-        {
-            //pet details
-            public string name;
-            public int level = 0;
-            public long exp = 0;
-            public char gender = 'm';
-            public User master;
-
-            public PetMoodComponent mood;
-            public PetFoodComponent food;
-
-            public Pet(User newMaster, string newName, char newGender = 'm')
-            {
-                this.master = newMaster;
-                this.name = newName;
-                this.gender = newGender;
-
-                //assign components
-                this.mood = new PetMoodComponent(this);
-                this.food = new PetFoodComponent(this);
-
-                Console.WriteLine("A new {1} lion was created, named {0}, belonging to {2}",
-                    this.name, this.getGender(), this.master.name);
-                //constructor method
-            }
-
-
-            public override string ToString()
-            {
-                return string.Format("A {0} pet name {1}", this.getGender(), this.name);
-            }
-
-
-            /// <summary>
-            /// Returns the gender of the Pet, either full word "male" or a single letter "m"
-            /// </summary>
-            /// <param name="fullWord"></param>
-            /// <returns>"male" or "m"</returns>
-            public string getGender(bool fullWord = true)
-            {
-                if (fullWord)
+                else if (gender == 'f')
                 {
-                    if (this.gender == 'm')
-                    {
-                        return "male";
-                    }
-                    else
-                    {
-                        return "female";
-                    }
+                    return "her";
                 }
                 else
                 {
-                    return this.gender.ToString();
+                    return "it's";
                 }
             }
+        }
 
-            /// <summary>
-            /// Adds exp to the pet's total, and changes the level if needed
-            /// </summary>
-            /// <param name="exp"></param>
-            /// <returns>a long with the total exp</returns>
-            public long raiseExp(long newExp)
+        public User master;
+
+        public PetMoodComponent mood;
+        public PetFoodComponent food;
+
+        public Pet(User newMaster, string newName, char newGender = 'm')
+        {
+            this.master = newMaster;
+            this.name = newName;
+            this.gender = newGender;
+
+            //assign components
+            this.mood = new PetMoodComponent(this);
+            this.food = new PetFoodComponent(this);
+
+            Console.WriteLine("A new {1} lion was created, named {0}, belonging to {2}",
+                this.name, this.getGender(), this.master.name);
+            //constructor method
+        }
+
+
+        public override string ToString()
+        {
+            return string.Format("A {0} pet name {1}", this.getGender(), this.name);
+        }
+
+
+        /// <summary>
+        /// Returns the gender of the Pet, either full word "male" or a single letter "m"
+        /// </summary>
+        /// <param name="fullWord"></param>
+        /// <returns>"male" or "m"</returns>
+        public string getGender(bool fullWord = true)
+        {
+            if (fullWord)
             {
-                this.exp += newExp;
-                long printedExp;
-                printedExp = printExp();
-                return printedExp;
+                if (this.gender == 'm')
+                {
+                    return "male";
+                }
+                else
+                {
+                    return "female";
+                }
             }
-
-            //Writes the current exp to the console and returns a long of the current exp
-            public long printExp()
+            else
             {
-                Console.WriteLine("This is {0}'s total exp : {1}", this.name, this.exp);
-                return this.exp;
+                return this.gender.ToString();
             }
+        }
+
+        /// <summary>
+        /// Adds exp to the pet's total, and changes the level if needed
+        /// </summary>
+        /// <param name="exp"></param>
+        /// <returns>a long with the total exp</returns>
+        public long raiseExp(long newExp)
+        {
+            this.exp += newExp;
+            long printedExp;
+            printedExp = printExp();
+            return printedExp;
+        }
+
+        //Writes the current exp to the console and returns a long of the current exp
+        public long printExp()
+        {
+            Console.WriteLine("This is {0}'s total exp : {1}", this.name, this.exp);
+            return this.exp;
+        }
 
 
 
-            public void changeName(string newName)
-            {
-                this.name = newName;
-                Console.WriteLine("Pets new name: {0}", name);
-            }
+        public void changeName(string newName)
+        {
+            this.name = newName;
+            Console.WriteLine("Pets new name: {0}", name);
         }
     }
 }
+
