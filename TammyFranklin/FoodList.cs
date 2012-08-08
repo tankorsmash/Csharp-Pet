@@ -10,14 +10,18 @@ namespace PetR1
     {
         public int nutrientsGiven = 15;
 
-        public string type_of_food;
+        //public string type_of_food;
 
         public  FoodType()
         {
-            this.type_of_food = "General Food stuff";
-            this.type_of_food = this.ToString().Remove(0, 10);
+            //this.type_of_food = "General Food stuff";
+            //this.type_of_food = this.ToString().Remove(0, 10);
         }
 
+        public override string ToString()
+        {
+            return base.ToString().Remove(0, 10);
+        }
     }
 
     

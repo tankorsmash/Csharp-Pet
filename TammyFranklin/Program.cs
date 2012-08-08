@@ -13,7 +13,7 @@ namespace PetR1
     class Meta
     {
         public static string ver = "0.0.2";
-
+        public static string name_ver = String.Format("PetR1 {0}", ver);
 
     }
 
@@ -29,7 +29,7 @@ namespace PetR1
         static void Main(string[] args)
         {
             //Intro to the app
-            Console.Title = "sarah's game";
+            Console.Title = Meta.name_ver;
 
 
             Console.BackgroundColor = defaultBG;
@@ -44,6 +44,7 @@ namespace PetR1
 
             //Creates User with a default name
             User user = new User();
+            user.inventory.AddItem(new FoodApple());
 
             //Gets the name of the pet.
             string name = Tools.Prompt("What is the name of your new male Pet?");
@@ -64,15 +65,23 @@ namespace PetR1
                 string choices = "\t[f]eed, [b]attle, [s]tats or [q]uit.";
                 KeyValuePair<string, string> action = getUserAction(choices);
 
+                //feed the pet
                 if (action.Value == "feed")
                 {
                     FeedAction feeding = new FeedAction(user);
                     feeding.FeedPet(yourPet, new FoodMeat());
                 }
+                //check stats of the current pet
                 else if (action.Value == "stats")
                 {
                     StatAction stats = new StatAction(user);
                     stats.CheckPetStats(yourPet);
+                }
+
+                //quit the main loop
+                else if (action.Value == "quit")
+                {
+                    break;
                 }
 
                 //Tools.Print(newFG: ConsoleColor.Yellow, text:"This was the action chosen: {0}\n", vals:action);
@@ -81,7 +90,10 @@ namespace PetR1
 
 
             //Wait for Key on exit
-            Tools.Print(ConsoleColor.DarkRed, ConsoleColor.DarkYellow, "Press any key to exit");
+            Tools.Print(ConsoleColor.DarkRed, 
+                    ConsoleColor.DarkYellow,
+                    "Press any key to exit {0}",
+                    Meta.name_ver);
             Console.ReadKey();
         }
 
@@ -102,7 +114,7 @@ namespace PetR1
                 //Verify that it's in the keys of the validAnswers
                 if (validAnwers.ContainsKey(action))
                 {
-                    Tools.Print("you have chosen wisely\n");
+                    Tools.Print("you have chosen wisely and a valid key.\n");
                     //Tools.Print(validAnwers[action]);
                     //return action;
                     return new KeyValuePair<string, string>(action, validAnwers[action]);
@@ -189,7 +201,7 @@ namespace PetR1
                 string text = "{0} just ate {1}, {3} satiation level is now: {2}\n";
                 string formatted = String.Format(text,
                                                 pet.name,
-                                                foodToEat.type_of_food.ToLower(),
+                                                foodToEat.ToString().ToLower(),
                                                 pet.food.satiation,
                                                 pet.pronoun);
                 Tools.Print(newFG: defaultFG,
@@ -245,10 +257,10 @@ namespace PetR1
 
         public override string ToString()
         {
-            return String.Format("A User named {0}", this.name);
+            return String.Format("User:{0}", this.name);
         }
 
-        public User(string newName = "USERjosh")
+        public User(string newName = "DefaultName")
         {
 
             this.name = newName;
@@ -381,6 +393,27 @@ namespace PetR1
     class PetStatusComponent
     {
 
+        public List<Debuff> debuffs = new List<Debuff>();
+        public List<Buff> buffs = new List<Buff>();
+
+        public User owner;
+        /// <summary>
+        /// Constructor, assigns a User to owner
+        /// </summary>
+        /// <param name="owner">the user who owns this pet</param>
+        public void PetStatusComponent(User owner)
+        {
+            this.owner = owner;
+        }
+
+        /// <summary>
+        /// Used every loop to check whether the pet is sick, hungry, full, tired etc.
+        /// If status > 1, then a string will be shown before you prompt
+        /// </summary>
+        public void CheckPetStatus()
+        {
+            
+        }
 
 
     }
@@ -409,7 +442,10 @@ namespace PetR1
 
             if (satiation >= 150)
             {
-                Tools.Print(newBG: ConsoleColor.Red, text: "Mother fucker is full yo, stop feeding it.");
+
+                Tools.Print(newBG: ConsoleColor.Red, text: "Mother fucker is full yo, stop feeding it.\n");
+
+
             }
         }
 
