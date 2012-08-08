@@ -401,7 +401,7 @@ namespace PetR1
         /// Constructor, assigns a User to owner
         /// </summary>
         /// <param name="owner">the user who owns this pet</param>
-        public void PetStatusComponent(User owner)
+        public  PetStatusComponent(User owner)
         {
             this.owner = owner;
         }

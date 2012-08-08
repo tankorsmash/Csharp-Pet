@@ -12,7 +12,7 @@ namespace PetR1
     {
         public Pet owner;
 
-        public void Status(Pet owner)
+        public  Status(Pet owner)
         {
             this.owner = owner;
 
@@ -24,7 +24,10 @@ namespace PetR1
     /// </summary>
     class Debuff : Status
     {
-
+        public Debuff(Pet owner) : base(owner) 
+        {
+            base.owner = owner;
+        }
     }
     
 
@@ -33,6 +36,9 @@ namespace PetR1
     /// </summary>
     class Buff : Status
     {
-
+        public Buff(Pet owner) : base(owner)
+        {
+            base.owner = owner;
+        }
     }
 }

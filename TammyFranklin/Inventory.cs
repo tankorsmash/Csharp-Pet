@@ -28,7 +28,7 @@ namespace PetR1
             Tools.Print("Adding {0} to {1}'s inventory\n",
                         new object[] { item, this.owner });
             items.Add(item);
-            Tools.Print("Total of {0} items in {1}'s inventor\\n",
+            Tools.Print("Total of {0} items in {1}'s inventory\n",
                         items.Count, owner.name);
         }
 
