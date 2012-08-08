@@ -68,8 +68,14 @@ namespace PetR1
                 //feed the pet
                 if (action.Value == "feed")
                 {
+                    //this is  a real shitty way of doing this. There 
+                    // shouldn't be a class all on its own... :(
                     FeedAction feeding = new FeedAction(user);
-                    feeding.FeedPet(yourPet, new FoodMeat());
+
+                    user.inventory.ShowInventory();
+
+                    feeding.FeedPet(yourPet, user.inventory.items[0]);
+                    //feeding.FeedPet(yourPet, new FoodMeat());
                 }
                 //check stats of the current pet
                 else if (action.Value == "stats")

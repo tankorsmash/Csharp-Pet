@@ -6,7 +6,7 @@ using System.Text;
 namespace PetR1
 {
     
-    class  FoodType
+    class  FoodType : Items
     {
         public int nutrientsGiven = 15;
 
