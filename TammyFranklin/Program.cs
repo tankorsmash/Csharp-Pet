@@ -44,7 +44,10 @@ namespace PetR1
 
             //Creates User with a default name
             User user = new User();
+            user.inventory.AddItem(new FoodFruit());
             user.inventory.AddItem(new FoodApple());
+            user.inventory.AddItem(new FoodApple());
+            user.inventory.AddItem(new FoodMeat());
 
             //Gets the name of the pet.
             string name = Tools.Prompt("What is the name of your new male Pet?");
@@ -74,7 +77,7 @@ namespace PetR1
 
                     user.inventory.ShowInventory();
 
-                    feeding.FeedPet(yourPet, user.inventory.items[0]);
+                    feeding.FeedPet(yourPet, user.inventory.items[0] as FoodType);
                     //feeding.FeedPet(yourPet, new FoodMeat());
                 }
                 //check stats of the current pet
@@ -201,15 +204,21 @@ namespace PetR1
             public void FeedPet(Pet pet, FoodType foodToEat)
             {
                 //feed the pet food
-                pet.food.Eat(foodToEat);
+                int gainedNuts = pet.food.Eat(foodToEat);
 
+                string text = "";
+
+                if (gainedNuts > 0)
+                {
+                    text = String.Format("{0} just ate {1},", 
+                                            pet.name, 
+                                            foodToEat.ToString().ToLower());
+                }
                 //print the 
-                string text = "{0} just ate {1}, {3} satiation level is now: {2}\n";
+                text = text + "{0} satiation level is: {1}\n";
                 string formatted = String.Format(text,
-                                                pet.name,
-                                                foodToEat.ToString().ToLower(),
-                                                pet.food.satiation,
-                                                pet.pronoun);
+                                                pet.pronoun,
+                                                pet.food.satiation);
                 Tools.Print(newFG: defaultFG,
                             text: formatted,
                             newBG: ConsoleColor.DarkGreen);
@@ -291,15 +300,15 @@ namespace PetR1
         public static string Print(string text, params object[] vals)
         {
             string toPrint = string.Format(text, vals);
-
-            if (!toPrint.EndsWith("\n"))
-            {
-                Console.Write(toPrint);
-            }
-            else if (toPrint.EndsWith("\n"))
-            {
-                Console.WriteLine(toPrint);
-            }
+            Console.Write(toPrint);
+            //if (! toPrint.EndsWith("\n"))
+            //{
+            //    Console.Write(toPrint);
+            //}
+            //else if (toPrint.EndsWith("\n"))
+            //{
+            //    Console.WriteLine(toPrint);
+            //}
             return text;
         }
 
@@ -323,21 +332,11 @@ namespace PetR1
             Console.ForegroundColor = newFG;
             Console.BackgroundColor = newBG;
 
-            //try
-            //{
             string toPrint = string.Format(text, vals);
-            //Console.WriteLine(toPrint);
-            Print(toPrint);
+            Console.WriteLine(toPrint);
+            //Print(toPrint);
 
-            //}
-            //catch (FormatException ex)
-            //{
-            //Console.WriteLine(vals);
-            //Console.WriteLine(ex);
-            //}
-
-
-            //Change the colors back
+            //Change the Console colors back to what they were
             Console.ForegroundColor = curFG;
             Console.BackgroundColor = curBG;
 
@@ -383,7 +382,7 @@ namespace PetR1
             this.master = master;
 
             //print confirmation.
-            Tools.Print(ConsoleColor.Green, ConsoleColor.DarkYellow, "This general mood belongs to: {0}\n", this.getMaster().ToString());
+            //Tools.Print(ConsoleColor.Green, ConsoleColor.DarkYellow, "This general mood belongs to: {0}\n", this.getMaster().ToString());
         }
 
         public Pet getMaster()
@@ -442,17 +441,19 @@ namespace PetR1
             this.master = master;
         }
 
-        public void Eat(FoodType toBeEaten)
+        public int Eat(FoodType toBeEaten)
         {
-            this.satiation += toBeEaten.nutrientsGiven;
+            int gainedNutrients= toBeEaten.EatThis();
+            this.satiation += gainedNutrients;
 
             if (satiation >= 150)
             {
 
                 Tools.Print(newBG: ConsoleColor.Red, text: "Mother fucker is full yo, stop feeding it.\n");
 
-
             }
+
+            return gainedNutrients;
         }
 
     }

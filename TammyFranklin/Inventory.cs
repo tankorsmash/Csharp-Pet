@@ -8,7 +8,7 @@ namespace PetR1
     class Inventory
     {
 
-        public List<Items> items;
+        public List<Item> items;
         User owner;
         public Inventory(User owner)
         {
@@ -18,12 +18,12 @@ namespace PetR1
             this.owner = owner;
 
             //list of all the things in the users inventory
-            this.items = new List<Items>();
+            this.items = new List<Item>();
 
         }
 
 
-        public void AddItem(object item)
+        public void AddItem(Item item)
         {
             Tools.Print("Adding {0} to {1}'s inventory\n",
                         new object[] { item, this.owner });
@@ -36,11 +36,12 @@ namespace PetR1
         //todo implement scrolling screen
         public void ShowInventory()
         {
-
+            Tools.Print(newFG: ConsoleColor.DarkGray, text: "{0}'s inventory:",
+            vals: owner.name);
             foreach (object item in items)
             {
-                string text = String.Format("This item {0}", item);
-                Console.WriteLine(text);
+                string text = String.Format("An item: {0}\n", item);
+                Tools.Print(newBG:ConsoleColor.DarkGray, text:text);
             }
 
         }
