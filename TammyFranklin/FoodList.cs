@@ -46,7 +46,8 @@ namespace PetR1
             }
             else 
             {
-                Tools.Print("{0} is already eaten.\n", this);
+                Tools.Print(newFG:ConsoleColor.Red,
+                text:"{0} is already eaten.\n", vals:this);
                 return 0;
             }
             

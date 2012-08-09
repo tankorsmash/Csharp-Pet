@@ -8,7 +8,7 @@ namespace PetR1
     class Inventory
     {
 
-        public List<Item> items;
+        public Dictionary<char,Item> items;
         User owner;
         public Inventory(User owner)
         {
@@ -18,7 +18,7 @@ namespace PetR1
             this.owner = owner;
 
             //list of all the things in the users inventory
-            this.items = new List<Item>();
+            this.items = new Dictionary<char, Item>();
 
         }
 
@@ -27,7 +27,7 @@ namespace PetR1
         {
             Tools.Print("Adding {0} to {1}'s inventory\n",
                         new object[] { item, this.owner });
-            items.Add(item);
+            items.Add('c', item);
             Tools.Print("Total of {0} items in {1}'s inventory\n",
                         items.Count, owner.name);
         }

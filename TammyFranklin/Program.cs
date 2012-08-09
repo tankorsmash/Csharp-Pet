@@ -28,6 +28,27 @@ namespace PetR1
 
         static void Main(string[] args)
         {
+            //debugging stuff
+
+            //seeing if you can convert chars to ints and back
+            //char val = 'A'; // c=99 so a=97? B=66 so A=65?
+            //val++;
+            //int newVal = (int)val;
+            //char newest = (char)newVal;
+            //Tools.Print(newVal.ToString()) ;
+
+            //testing if `c` and `C` are the same, they aren't
+            //string val;
+            //if ('c' == 'c') {val = "t"; }
+            //else {  val = "f"; }
+            //Tools.Print(val);
+
+
+
+
+            //end debugging
+
+
             //Intro to the app
             Console.Title = Meta.name_ver;
 
@@ -45,9 +66,9 @@ namespace PetR1
             //Creates User with a default name
             User user = new User();
             user.inventory.AddItem(new FoodFruit());
-            user.inventory.AddItem(new FoodApple());
-            user.inventory.AddItem(new FoodApple());
-            user.inventory.AddItem(new FoodMeat());
+            //user.inventory.AddItem(new FoodApple());
+            //user.inventory.AddItem(new FoodApple());
+            //user.inventory.AddItem(new FoodMeat());
 
             //Gets the name of the pet.
             string name = Tools.Prompt("What is the name of your new male Pet?");
@@ -77,7 +98,7 @@ namespace PetR1
 
                     user.inventory.ShowInventory();
 
-                    feeding.FeedPet(yourPet, user.inventory.items[0] as FoodType);
+                    feeding.FeedPet(yourPet, user.inventory.items['a'] as FoodType);
                     //feeding.FeedPet(yourPet, new FoodMeat());
                 }
                 //check stats of the current pet
