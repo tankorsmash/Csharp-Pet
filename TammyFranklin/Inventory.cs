@@ -25,9 +25,20 @@ namespace PetR1
 
         public void AddItem(Item item)
         {
-            Tools.Print("Adding {0} to {1}'s inventory\n",
-                        new object[] { item, this.owner });
-            items.Add('c', item);
+           
+            //want to add an item, but need to find a key that hasn't been used yet.
+            char newKey = 'a';
+            while ( items.ContainsKey(newKey))
+            {
+                newKey++;
+            }
+
+            //add the item to newKey
+            items.Add(newKey, item);
+
+            Tools.Print("Adding {0} to {1}'s inventory at '{2}'\n",
+                       new object[] { item, this.owner, newKey });
+
             Tools.Print("Total of {0} items in {1}'s inventory\n",
                         items.Count, owner.name);
         }

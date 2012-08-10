@@ -43,7 +43,9 @@ namespace PetR1
             //else {  val = "f"; }
             //Tools.Print(val);
 
-
+            char qwe = 'a';
+            qwe++;
+            Console.WriteLine(qwe);
 
 
             //end debugging
@@ -66,7 +68,7 @@ namespace PetR1
             //Creates User with a default name
             User user = new User();
             user.inventory.AddItem(new FoodFruit());
-            //user.inventory.AddItem(new FoodApple());
+            user.inventory.AddItem(new FoodApple());
             //user.inventory.AddItem(new FoodApple());
             //user.inventory.AddItem(new FoodMeat());
 
@@ -98,7 +100,10 @@ namespace PetR1
 
                     user.inventory.ShowInventory();
 
-                    feeding.FeedPet(yourPet, user.inventory.items['a'] as FoodType);
+                    string choice = Tools.Prompt("Choose a key from your items to feed");
+                    char charChoice = (char)choice[0];
+
+                    feeding.FeedPet(yourPet, user.inventory.items[charChoice] as FoodType);
                     //feeding.FeedPet(yourPet, new FoodMeat());
                 }
                 //check stats of the current pet
@@ -118,9 +123,8 @@ namespace PetR1
 
             }
 
-
             //Wait for Key on exit
-            Tools.Print(ConsoleColor.DarkRed, 
+            Tools.Print(ConsoleColor.DarkRed,
                     ConsoleColor.DarkYellow,
                     "Press any key to exit {0}",
                     Meta.name_ver);
@@ -231,8 +235,8 @@ namespace PetR1
 
                 if (gainedNuts > 0)
                 {
-                    text = String.Format("{0} just ate {1},", 
-                                            pet.name, 
+                    text = String.Format("{0} just ate {1},",
+                                            pet.name,
                                             foodToEat.ToString().ToLower());
                 }
                 //print the 
@@ -270,7 +274,7 @@ namespace PetR1
                              pet.exp});
             }
         }
-    }
+    }   
 
 
     class User
