@@ -12,7 +12,7 @@ namespace PetR1
         User owner;
         public Inventory(User owner)
         {
-            Tools.Print("{0}'s Inventory was constructed\n", owner);
+            //Tools.Print("{0}'s Inventory was constructed\n", owner);
             
             //store the owner of the instance
             this.owner = owner;

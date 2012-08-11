@@ -51,7 +51,7 @@ namespace PetR1
 
             if (gainedNuts > 0)
             {
-                text = String.Format("{0} just ate {1},",
+                text = String.Format("{0} just ate {1}, ",
                                         pet.name,
                                         foodToEat.ToString().ToLower());
             }
@@ -84,10 +84,13 @@ namespace PetR1
             Tools.Print(newFG: ConsoleColor.Gray,
             text: "Current Pet's name {0}\n" +
                          "Current Satiation {1}\n" +
-                         "Current EXP {2}\n",
+                         "Current EXP {2}\n"+
+                         "HP {3}/{4}\n",
               vals: new object[] {pet.name,
                              pet.food.satiation,
-                             pet.exp});
+                             pet.exp,
+                             pet.battle.currentHP,
+                             pet.battle.maxHP});
         }
     }
 }

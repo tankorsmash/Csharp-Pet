@@ -30,6 +30,13 @@ namespace PetR1
         {
             //debugging stuff
 
+
+            ////checking how c# passes vars
+            //int orig = 100;
+            //int first = orig;
+            //orig++;
+            //Tools.Print("Orig {0} and first {1}\n", new object[]{orig, first});
+
             //seeing if you can convert chars to ints and back
             //char val = 'A'; // c=99 so a=97? B=66 so A=65?
             //val++;
@@ -43,9 +50,9 @@ namespace PetR1
             //else {  val = "f"; }
             //Tools.Print(val);
 
-            char qwe = 'a';
+            /*char qwe = 'a';
             qwe++;
-            Console.WriteLine(qwe);
+            Console.WriteLine(qwe);*/
 
 
             //end debugging
@@ -73,7 +80,8 @@ namespace PetR1
             //user.inventory.AddItem(new FoodMeat());
 
             //Gets the name of the pet.
-            string name = Tools.Prompt("What is the name of your new male Pet?");
+            //string name = Tools.Prompt("What is the name of your new male Pet?");
+            string name = "YourFirstPet";
             Pet yourPet = new Pet(user, name);
 
             //Intro message
@@ -111,6 +119,12 @@ namespace PetR1
                 {
                     StatAction stats = new StatAction(user);
                     stats.CheckPetStats(yourPet);
+                }
+
+                else if (action.Value == "battle")
+                {
+                    BattleAction battle = new BattleAction(user);
+                    yourPet.battle.TakeDamage(10);
                 }
 
                 //quit the main loop
@@ -238,7 +252,7 @@ namespace PetR1
             this.inventory = new Inventory(this);
             
             string text = String.Format("{0} was just created as an instance of {1}\n", this.name, this);
-            Tools.Print(newFG: ConsoleColor.Green, text: text);
+            //Tools.Print(newFG: ConsoleColor.Green, text: text);
 
 
         }
@@ -289,7 +303,7 @@ namespace PetR1
             Console.BackgroundColor = newBG;
 
             string toPrint = string.Format(text, vals);
-            Console.WriteLine(toPrint);
+            Console.Write(toPrint);
             //Print(toPrint);
 
             //Change the Console colors back to what they were
@@ -379,6 +393,37 @@ namespace PetR1
 
     }
 
+    class PetBattleComponent
+    {
+        public Pet master;
+
+        public int maxHP = 100;
+        public int currentHP;
+        
+
+        public PetBattleComponent(Pet master) 
+        {
+            this.master = master;
+            this.currentHP = this.maxHP;
+        }
+
+        public int TakeDamage(int damage)
+        {
+            this.currentHP -= damage;
+
+            Tools.Print(text:"{0} took {1} with {2} remaining HP\n",
+                        vals:new object[] { this.master, damage, this.currentHP },
+                        newBG: ConsoleColor.Magenta);
+
+            if (currentHP < 0)
+            {
+                Tools.Print("{0} is on {1} deathbed\n", new object[]{this.master,
+                                                    this.master.pronoun});
+            }
+
+            return this.currentHP;
+        }
+    }
 
     /// <summary>
     /// Handles all the eating related stuff for the pet

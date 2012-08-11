@@ -71,6 +71,7 @@ namespace PetR1
 
         public PetMoodComponent mood;
         public PetFoodComponent food;
+        public PetBattleComponent battle;
 
         public Pet(User newMaster, string newName, char newGender = 'm')
         {
@@ -81,9 +82,10 @@ namespace PetR1
             //assign components
             this.mood = new PetMoodComponent(this);
             this.food = new PetFoodComponent(this);
+            this.battle = new PetBattleComponent(this);
 
-            Console.WriteLine("A new {1} lion was created, named {0}, belonging to {2}",
-                this.name, this.getGender(), this.master.name);
+            //Tools.Print("A new {1} lion was created, named {0}, belonging to {2}\n",
+              //  this.name, this.getGender(), this.master.name);
             //constructor method
         }
 
