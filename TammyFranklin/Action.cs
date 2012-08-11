@@ -27,7 +27,7 @@ namespace PetR1
 
         public void BattlePet(Pet pet, Creature enemy)
         {
-            Tools.Print("RAWR LET'S GO FIGHTING");
+            Tools.Print("RAWR LET'S GO FIGHTING\n");
         }
 
     }

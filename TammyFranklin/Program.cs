@@ -96,7 +96,7 @@ namespace PetR1
             while (true)
             {
                 //give the user a choice of actions.
-                string choices = "\t[f]eed, [b]attle, [s]tats or [q]uit.";
+                string choices = "\t[f]eed, [b]attle, [t]hrow, [s]tats or [q]uit.";
                 KeyValuePair<string, string> action = getUserAction(choices);
 
                 //feed the pet
@@ -121,10 +121,24 @@ namespace PetR1
                     stats.CheckPetStats(yourPet);
                 }
 
+                else if (action.Value == "throw")
+                {
+                    Tools.Print(newBG:ConsoleColor.DarkRed, text:"You throw your pet against the wall\n");
+                    
+                   
+
+
+
+                    yourPet.battle.TakeDamage(10);
+                }
+
                 else if (action.Value == "battle")
                 {
+                    Creature enemy = new Creature();
+                   
+
                     BattleAction battle = new BattleAction(user);
-                    yourPet.battle.TakeDamage(10);
+                    battle.BattlePet(yourPet, enemy);
                 }
 
                 //quit the main loop
@@ -162,7 +176,7 @@ namespace PetR1
                 //Verify that it's in the keys of the validAnswers
                 if (validAnwers.ContainsKey(action))
                 {
-                    Tools.Print("you have chosen wisely and a valid key.\n");
+                    //Tools.Print("you have chosen wisely and a valid key.\n\n");
                     //Tools.Print(validAnwers[action]);
                     //return action;
                     return new KeyValuePair<string, string>(action, validAnwers[action]);
